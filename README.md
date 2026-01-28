@@ -119,6 +119,7 @@
         - 종류
             - 분류(Classification)
                 - 분류 모델의 기초 예제는 [notebook](02-sklearn/02_ml_workflow.ipynb) 참고
+                - 예측 확률이 가장 높은 레이블로 예측
             - 회귀(Regression)
         - Estimator
             - 지도 학습의 모든 알고리즘을 구현한 클래스
@@ -214,6 +215,79 @@
                 - 수행시간이 상대적으로 오래 걸림
 
 ### 03. 평가
+- 이진 분류(Binary Classification) 기준
+- 분류의 성능 평가 지표
+    - 정확도(Accuracy)
+    - 오차 행렬(Confusion Matrix)
+    - 정밀도(Precision)
+    - 재현율(Recall)
+    - F1 score
+    - ROC AUC
+
+- 각 성능 평가 지표에 대한 기초 예제는 [notebook](03-evaluation/03_evaluation_metric.ipynb) 참고
+- 실제 분류 문제에서 ML 모델에 성능 평가 지표를 적용하는 예제는 [notebook](03-evaluation/03_exercise_indian.ipynb) 참고
+
+1. 정확도(Accuracy)
+- 정답 데이터 건수 / 전체 예측 데이터 건수
+- 모델 성능을 왜곡하여 평가할 수 있음
+    - **불균형한 레이블 값 분포**에서 적합한 지표가 아님
+    - ex. 타이타닉 생존자 예측 - 남자면 사망, 여자면 생존으로 예측해도 충분히 높은 정확도가 나옴
+- 다른 여러 분류 지표와 함께 적용해야 함
+
+2. 오차 행렬(Confusion Matrix)
+- 예측 오류의 유형별 건수
+- 4분면 행렬
+    - [[TN, FP],
+       [FN, TP]]
+    - T/F : True/False
+    - P/N : Positive/Negative
+- Accuracy = (TN + TP) / (TN + FP + FN + TP)
+
+3. 정밀도 / 재현율
+- 정밀도(Precision)
+    - **= TP / (FP + TP)**
+    - Positive로 예측한 대상 중에 실제 값이 positive인 데이터의 비율
+    - '양성 예측도'
+    - 중요도가 올라가는 경우
+        - ***False Positive가 업무 상 큰 영향***을 일으키는 경우
+            - False Negative는 큰 문제가 되지 않는 경우
+        - ex. 스팸 메일 분류
+            - 중요한 메일을 스팸 처리해버리면 문제가 생김
+- 재현율(Recall)
+    - **= TP / (FN + TP)**
+    - 실제 값이 Positive인 대상 중에 예측 값이 positive인 데이터의 비율
+    - '민감도(sensitivity)', 'TPR(True Positive rate)'
+    - 중요도가 올라가는 경우
+        - ***False Negative가 업무 상 큰 영향***을 일으키는 경우
+            - False Positive는 큰 문제가 되지 않는 경우
+        - ex. 암 판단, 금융 사기 적발
+- Trade-Off
+    - 임계값이 낮아지면 Positive의 비율이 높아짐
+        - FP는 커지고, FN는 작아짐
+        - 정밀도는 낮아지고, 재현율은 높아짐
+    - 이와 같이 정밀도와 재현율은 임계값에 따른 음의 상관관계
+
+4. F1 Score
+- 정밀도와 재현율을 결합한 지표
+- 한 쪽으로 치우치지 않을 수록 높음
+- **= 2 / ((1 / recall) + (1 / precision))**
+
+5. ROC 곡선과 AUC score
+- ROC 곡선
+    - X축: FPR(False Positive Rate)
+        - **= FP / (TN + FP)** = 1 - TNR = 1 - TN / (FP + TN)
+            - TNR: 특이성(Specificity)
+    - Y축: TPR(True Positive Rate)
+        - **= TP / (FN + TP)**
+    - 임계값을 변화(1 -> 0)시키며 그래프를 그림
+        - 임계값 0: 전부 positive로 예측 => FN = TN = 0 => FPR = 1, TPR = 1
+        - 임계값 1: 전부 negative로 예측 => TP = FP = 0 => FPR = 0, TPR = 0
+        - (0,0) -> (1,1)에 가까워짐
+    - 직선에 가까울수록 성능이 떨어지고, 멀수록 성능이 뛰어남
+- AUC score
+    - ROC 곡선 면적
+    - 1에 가까울수록 좋음
+    - FPR이 작은 상태에서 얼마나 큰 TPR을 구할 수 있는가
 
 ### 04. 분류
 
